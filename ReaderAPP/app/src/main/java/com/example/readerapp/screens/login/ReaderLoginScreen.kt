@@ -38,7 +38,7 @@ import com.example.readerapp.R
 @Composable
 fun ReaderLoginScreen(
     navController: NavController,
-//    viewModel: LoginScreenViewModel = viewModel()
+    viewModel: LoginScreenViewModel = viewModel()
 ) {
     val showLoginForm = rememberSaveable { mutableStateOf(true) }
 
@@ -46,19 +46,19 @@ fun ReaderLoginScreen(
         Column(horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top) {
             ReaderLogo()
-//            if (showLoginForm.value) UserForm(loading = false, isCreateAccount = false){ email, password ->
-////                viewModel.signInWithEmailAndPassword(email, password){
-//                    navController.navigate(ReaderScreens.ReaderHomeScreen.name)
-//
-//                }
-//            }
-//            else {
-//                UserForm(loading = false, isCreateAccount = true){ email, password ->
-//                    viewModel.createUserWithEmailAndPassword(email, password) {
-//                        navController.navigate(ReaderScreens.ReaderHomeScreen.name)
-//                    }
-//                }
-//            }
+            if (showLoginForm.value) UserForm(loading = false, isCreateAccount = false){ email, password ->
+                viewModel.signInWithEmailAndPassword(email, password) {
+                    navController.navigate(ReaderScreens.ReaderHomeScreen.name)
+
+                }
+            }
+            else {
+                UserForm(loading = false, isCreateAccount = true){ email, password ->
+                    viewModel.createUserWithEmailAndPassword(email, password) {
+                        navController.navigate(ReaderScreens.ReaderHomeScreen.name)
+                    }
+                }
+            }
 
         }
         Spacer(modifier = Modifier.height(15.dp))
