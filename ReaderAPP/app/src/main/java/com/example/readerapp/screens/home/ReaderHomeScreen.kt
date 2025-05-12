@@ -1,28 +1,14 @@
 package com.example.readerapp.screens.home
 
-import android.annotation.SuppressLint
+
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.material3.Surface
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,16 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.example.readerapp.components.FABContent
-import com.example.readerapp.components.ListCard
-import com.example.readerapp.components.ReaderAppBar
-import com.example.readerapp.components.TitleSection
-import com.example.readerapp.model.MBook
-import com.example.readerapp.navigation.ReaderScreens
-import com.google.firebase.auth.FirebaseAuth
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+
 @Composable
 fun Home(navController: NavController,
          viewModel: HomeScreenViewModel = hiltViewModel()  //viewModel
@@ -91,7 +69,7 @@ fun HomeContent(navController: NavController, viewModel: HomeScreenViewModel) {
 //        MBook(id = "dadfa", title = "Hello Again", authors = "All of us", notes = null),
 //        MBook(id = "dadfa", title = "Hello Again", authors = "All of us", notes = null)
 //                            )
-
+    //me @gmail.com
     val email = FirebaseAuth.getInstance().currentUser?.email
     val currentUserName = if (!email.isNullOrEmpty())
         FirebaseAuth.getInstance().currentUser?.email?.split("@")
@@ -111,10 +89,10 @@ fun HomeContent(navController: NavController, viewModel: HomeScreenViewModel) {
                             navController.navigate(ReaderScreens.ReaderStatsScreen.name)
                         }
                         .size(45.dp),
-                    tint = MaterialTheme.colorScheme.secondaryContainer)
+                    tint = MaterialTheme.colors.secondaryVariant)
                 Text(text = currentUserName!!,
                     modifier = Modifier.padding(2.dp),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.overline,
                     color = Color.Red,
                     fontSize = 15.sp,
                     maxLines = 1,
