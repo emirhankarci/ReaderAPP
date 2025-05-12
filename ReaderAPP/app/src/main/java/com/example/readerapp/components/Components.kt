@@ -37,12 +37,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -56,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.example.readerapp.model.MBook
 import com.example.readerapp.navigation.ReaderScreens
 import com.google.firebase.auth.FirebaseAuth
@@ -281,81 +285,74 @@ fun BookRating(score: Double = 4.5) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListCard(book: MBook,
              onPressDetails: (String) -> Unit = {}) {
+    val context = LocalContext.current
+    val resources = context.resources
 
-    Card(
-        shape = RoundedCornerShape(29.dp),
+    val displayMetrics = resources.displayMetrics
+
+    val screenWidth = displayMetrics.widthPixels / displayMetrics.density
+    val spacing = 10.dp
+
+    Card(shape = RoundedCornerShape(29.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = Modifier
             .padding(16.dp)
-            .clickable { onPressDetails.invoke(book.title ?: "No title") }
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top
-            ) {
-                Image(
-                    painter = rememberAsyncImagePainter(model = book.photoUrl.toString()),
-                    contentDescription = "Book image",
+            .height(242.dp)
+            .width(202.dp)
+            .clickable { onPressDetails.invoke(book.title.toString()) }) {
+
+        Column(modifier = Modifier.width(screenWidth.dp - (spacing * 2)),
+            horizontalAlignment = Alignment.Start) {
+            Row(horizontalArrangement = Arrangement.Center) {
+
+                Image(painter = rememberImagePainter(data = book.photoUrl.toString()),
+                    contentDescription = "book image",
                     modifier = Modifier
-                        .size(width = 100.dp, height = 140.dp)
-                        .padding(end = 8.dp)
-                )
+                        .height(140.dp)
+                        .width(100.dp)
+                        .padding(4.dp))
+                Spacer(modifier = Modifier.width(50.dp))
 
-                Column(
-                    modifier = Modifier.weight(1f).padding(top = 4.dp),
-                    horizontalAlignment = Alignment.End
-                ) {
-                    androidx.compose.material3.Icon(
-                        imageVector = Icons.Rounded.FavoriteBorder,
-                        contentDescription = "Favorite Icon",
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    BookRating(score = book.rating ?: 0.0)
+                Column(modifier = Modifier.padding(top = 25.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    androidx.compose.material3.Icon(imageVector = Icons.Rounded.FavoriteBorder,
+                        contentDescription = "Fav Icon",
+                        modifier = Modifier.padding(bottom = 1.dp))
+
+                    BookRating(score = book.rating!!)
                 }
+
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = book.title ?: "No Title",
-                style = MaterialTheme.typography.titleMedium,
+            Text(text = book.title.toString(), modifier = Modifier.padding(4.dp),
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+                overflow = TextOverflow.Ellipsis)
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = book.authors.toString(), modifier = Modifier.padding(4.dp),
+                style = MaterialTheme.typography.headlineMedium) }
 
-            Text(
-                text = book.authors?.joinToString(", ") ?: "Unknown Author",
-                style = MaterialTheme.typography.bodySmall
-            )
+        val isStartedReading = remember {
+            mutableStateOf(false)
+        }
 
-            Spacer(modifier = Modifier.height(8.dp))
+        Row(horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.Bottom) {
+            isStartedReading.value = book.startedReading != null
 
-            val hasStartedReading = book.startedReading != null
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RoundedButton(
-                    label = if (hasStartedReading) "Reading" else "Not Yet",
-                    radiusPercent = 70
-                )
-            }
+            RoundedButton(label = if (isStartedReading.value)  "Reading" else "Not Yet",
+                radiusPercent = 70)
+
         }
     }
+
+
+
 }
 
 
